@@ -33,19 +33,52 @@
 #include "utils/uartstdio.h"
 #include "log.h"
 
-#define LOG_OUTPUT_BUFFER_SIZE 64
-#define LOG_NUM_SUB_SYSTEMS 5
+//*****************************************************************************
+//
+// Configuration Defines
+//
+//*****************************************************************************
+#define LOG_OUTPUT_BUFFER_SIZE 64  // Maximum amount of characters that the 
+                                   // log can output via UART
+#define LOG_NUM_SUB_SYSTEMS    5   // Number of subsystems
 
-static char buffer[LOG_OUTPUT_BUFFER_SIZE] = "";
 
-static uint32_t sub_system_levels[LOG_NUM_SUB_SYSTEMS];
+//*****************************************************************************
+//
+// Internal variables
+//
+//*****************************************************************************
+static char buffer[LOG_OUTPUT_BUFFER_SIZE] = "";       // Ouput Buffer
+static uint32_t sub_system_levels[LOG_NUM_SUB_SYSTEMS];// Maintains logging
+                                                       // level for each
+                                                       // subsystem
 
+//*****************************************************************************
+//
+//! Initializes the loggging module
+//
+//*****************************************************************************
 void log_init()
 {
+	// Set each logging level to 0 (log all messages)
 	for (uint32_t i = 0; i < LOG_NUM_SUB_SYSTEMS; i++)
 		sub_system_levels[i] = 0;
 }
 
+//*****************************************************************************
+//
+//! Convert logging level of type enum e_log_level to a human readable string
+//! 
+//! \param level is the logging level to convert to a string
+//! 
+//! This function is used to convert a logging level represented as a 
+//! enum e_log_level type to a string. When adding additional logging levels,
+//! add them to the switch cases. 
+//!
+//! \return pointer to first character of string
+//! 
+//
+//*****************************************************************************
 char* log_level_to_string(enum e_log_level level)
 {
 	switch(level)
@@ -67,6 +100,21 @@ char* log_level_to_string(enum e_log_level level)
 	}
 }
 
+//*****************************************************************************
+//
+//! Convert subsystem of type enum e_log_sub_system to a human readable
+//! string
+//! 
+//! \param sys is the subsystem to convert
+//! 
+//! This function is used to convert a subsystem represented as a enum 
+//! e_log_level type to a string. When adding additional subsystems,
+//! add them to the switch case.
+//!
+//! \return pointer to first character of string
+//! 
+//
+//*****************************************************************************
 char *log_sub_system_to_string(enum e_log_sub_system sys)
 {
 	switch(sys)
@@ -86,6 +134,22 @@ char *log_sub_system_to_string(enum e_log_sub_system sys)
 	}
 }
 
+//*****************************************************************************
+//
+//! Log a message
+//! 
+//! \param sys is the subsystem of the message.
+//! \param level is the logging level.
+//! \param msg is the message to log.
+//! 
+//! This function is used to log a message on the output stream with the
+//! following format "*LOG* SubSys:<sys> Lvl:<lvl> Msg:<msg>".
+//! Currently the function outputs to UART0.
+//!
+//! \return None.
+//! 
+//
+//*****************************************************************************
 void log_msg(enum e_log_sub_system sys, enum e_log_level level, char *msg)
 {
 	#ifndef LOG_GLOBAL_OFF
@@ -109,6 +173,23 @@ void log_msg(enum e_log_sub_system sys, enum e_log_level level, char *msg)
 	#endif
 }
 
+//*****************************************************************************
+//
+//! Log a message with a uint32 value
+//! 
+//! \param sys is the subsystem of the message.
+//! \param level is the logging level.
+//! \param msg is the message to log.
+//! \param value is the value to log
+//! 
+//! This function is used to log a message on the output stream with the
+//! following format "*LOG* SubSys:<sys> Lvl:<lvl> Msg:<msg> Val:<value>".
+//! Currently the function outputs to UART0.
+//!
+//! \return None.
+//! 
+//
+//*****************************************************************************
 void log_msg_value(enum e_log_sub_system sys, enum e_log_level level, char *msg, uint32_t value)
 {
 	#ifndef LOG_GLOBAL_OFF
@@ -138,6 +219,33 @@ void log_msg_value(enum e_log_sub_system sys, enum e_log_level level, char *msg,
 	#endif
 }
 
+//*****************************************************************************
+//
+//! Sets the output level for a specific subsystem.
+//! 
+//! \param sys is the subsystem to set the level of
+//! \param level is level to set to
+//! 
+//! This function is used to set the logging level of a specific subsystem. 
+//! The logging module only logs messages if the subsystem logging level 
+//! is set to a lower value than the logging level set by this method. 
+//!
+//! The avaiable logging levels are (from low to high value)
+//!	LOG_LEVEL_INFO_ONLY, 
+//!	LOG_LEVEL_DEBUG, 
+//!	LOG_LEVEL_WARNING, 
+//!	LOG_LEVEL_ERROR, 
+//!	LOG_LEVEL_CRITICAL,
+//!	LOG_LEVEL_NONE
+//!
+//! For example, setting the logging level to LOG_LEVEL_WARNING will only log
+//! messages labeled as LOG_LEVEL_INFO_ONLY, LOG_LEVEL_DEBUG and 
+//! LOG_LEVEL_WARNING. 
+//! 
+//! \return None.
+//! 
+//
+//*****************************************************************************
 void log_output_level_set(enum e_log_sub_system sys, enum e_log_level level)
 {
 	sub_system_levels[sys] = level;
