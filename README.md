@@ -1,5 +1,5 @@
 # LED Lamp
-Utilized TI's Tiva C Serices MCU (ARM Cortex-M4F) to control an LED Lamp that used a I2C lux sensor to auto adjust the brightness. Almost all the code was developed from stratch to learn as much as possible programming on embedded sytems.
+###### *Utilized TI's Tiva C Serices MCU (ARM Cortex-M4F) to control an LED Lamp that used a I2C lux sensor to auto adjust the brightness. Almost all the code was developed from stratch to learn as much as possible programming on embedded sytems.*
 
 ## Project Description
 A while back, I bought a cheap LED lamp off of Amazon. Unlike most lamps that only outputs one color temperature, this lamp consisted of two LEDs, one LED group to emited a warm light and another LED group emited a cool light. By adjusting the relative brightness of each LED, different temperature profiles could be made. 
