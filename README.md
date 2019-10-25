@@ -1,2 +1,9 @@
-# LED_Lamp_2
-Project mainly for learning ARM microcontrollers and embedded system software design
+# LED Lamp 2
+Using TI's Tiva C Serices MCU (ARM Cortex-M4F) to control an LED Lamp that used a I2C lux sensor to auto adjust the brightness. Almost all the code was developed from stratch to learn as much as possible programming on embedded sytems.
+
+## Project Description
+A while back, I bought a cheap LED lamp off of Amazon. Unlike most lamps that only outputs one color temperature, this lamp consisted of two LEDs, one LED group to emited a warm light and another LED group emited a cool light. By adjusting the relative brightness of each LED, different temperature profiles could be made. 
+
+I wanted to know how the lamp operated so I took it apart, used a oscilloscope to probe a few signals and discovered that an onboard microcontroller was providing a PWM signal with variable duty cycles to set each different temperature profile. I thought that this would be a perfect opportunity to learn how to use my own microcontroller to control the brightness of the LEDs. Originally, I developed part of the code on the chipKit uC32 MCU (Microchip's version of the Arduino) but I soon got my hands on a Tiva C series MCU by Texas Instruments and ported the project over. I also incorporated a I2C lux sensor to automatically adjust the brightness of the LEDs. 
+
+The source code utilizes TI's peripheral driver library which provides a very thin layer of abstraction between the user and direct register read/writes. In order to use the library effectively, the user still needs to properly understand how the specific MCU operates by reading the datasheet. This project could have been written without the use of TI's peripheral driver but this was avoided for a couple of reasons. First, the functions provided by the peripheral driver makes it obvious to the reader of the code as to what registers the function is accessing. Usually when writing directly to the register, it is not so obvious and additional comments are needed to support each code statement. Second, it saves valuable time. There is no need to look up what each bit in each register does in  the datasheet, detail is encapsulated by funtion. 
